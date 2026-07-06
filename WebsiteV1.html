@@ -53,9 +53,8 @@
                 color: var(--machine-black);
             }
 
-            /* THREE.JS BACKGROUND CONTAINER */
             #background-canvas {
-                background-image: url("https://raw.githubusercontent.com/duckidouk/WEBSITE/refs/heads/main/CONTENT/metalchains.gif");
+                background-image: url("https://raw.githubusercontent.com/duckidouk/WEBSITE/refs/heads/main/CONTENT/falling.jpg");
                 position: fixed;
                 top: 0;
                 left: 0;
@@ -65,12 +64,14 @@
             }
 
             /* WINDOW FRAME COMPONENTS */
+
+            /* BACKGROUND: BLOOD*/
             .window {
                 border: 2px outset var(--machine-black);
                 background-image: url("https://gifcity.carrd.co/assets/images/gallery63/e4d99638.gif?v=3fc8f5cd");
                 position: relative;
             }
-
+            /* BACKGROUND: MUD RED*/
             .window-header {
                 background-image: url("https://gifcity.carrd.co/assets/images/gallery63/13e6956f.jpg?v=3fc8f5cd");
 
@@ -87,7 +88,7 @@
                 display: flex;
                 gap: 2px;
             }
-
+            /* BACKGROUND: CROSS WHITE*/
             .control-btn {
                 width: 16px;
                 height: 14px;
@@ -145,7 +146,7 @@
             .scrollbox::-webkit-scrollbar-track {
                 background: var(--light-gray);
             }
-
+            /* BACKGROUND: PAPER RED*/
             .scrollbox::-webkit-scrollbar-thumb {
                 background-image: url("https://gifcity.carrd.co/assets/images/gallery63/e85d90a3.png?v=3fc8f5cd");
                 border: 1px outset var(--steel-gray);
@@ -171,7 +172,7 @@
                 font-weight: bold;
                 margin-right: 2px;
             }
-
+            /* BACKGROUND: STAR RED*/
             .tab-header.active {
                 background-image: url("https://gifcity.carrd.co/assets/images/gallery63/5780db63.gif?v=3fc8f5cd");
                 border: 2px inset var(--blood-red);
@@ -180,7 +181,7 @@
 
             .tab-content {
                 padding: 8px;
-                background-image: url("https://gifcity.carrd.co/assets/images/gallery65/f568ea87.png?v=3fc8f5cd");
+                background-image: url("https://raw.githubusercontent.com/duckidouk/WEBSITE/refs/heads/main/CONTENT/metalchains.gif");
 
                 min-height: 200px;
                 display: none;
@@ -637,7 +638,7 @@
 
                 <audio
                     id="myAudio"
-                    src="https://dl.dropboxusercontent.com/scl/fi/ztbjdqjeol6o076tdgjb1/WelcomeToTheFactory.wav?rlkey=222ofhx02vdu4h3xhpg390jy9&dl=0"
+                    src="https://raw.githubusercontent.com/duckidouk/WEBSITE/main/CONTENT/a_confession.mp3"
                 ></audio>
 
                 <script>
@@ -881,48 +882,32 @@
                                     margin-bottom: 12px;
                                 "
                             >
-                                NEURAL_JOURNAL.LOG
+                                BAND JOURNAL
                             </h2>
 
-                            <div class="journal-entry">
-                                <div class="journal-date">1998.03.15</div>
+                            <div class="journal-entry" style="font-size: 25px">
+                                <div class="journal-date">HENRY</div>
+                                <div>I have been doing Blitzkrieg video.</div>
+                            </div>
+
+                            <div class="journal-entry" style="font-size: 25px">
+                                <div class="journal-date">ANDREI</div>
                                 <div>
-                                    System initialization complete. The machine
-                                    dreams in red pixels and obsolete protocols.
-                                    Industrial soundscapes bleeding through
-                                    corrupted audio drivers.
+                                    I have been on a tour with my friends to
+                                    France.
                                 </div>
                             </div>
 
-                            <div class="journal-entry">
-                                <div class="journal-date">1998.03.22</div>
+                            <div class="journal-entry" style="font-size: 25px">
+                                <div class="journal-date">DUC</div>
                                 <div>
-                                    Modified the visual interface with
-                                    additional brutalism. The user experience
-                                    must reflect the mechanical precision of
-                                    industrial machinery - no comfort, only
-                                    function.
+                                    Just came back from a wedding in croatia.
                                 </div>
                             </div>
 
-                            <div class="journal-entry">
-                                <div class="journal-date">1805.04.01</div>
-                                <div>
-                                    Implemented neural chat protocols. The
-                                    terminal speaks in machine language,
-                                    processing human emotion through digital
-                                    filters and industrial static.
-                                </div>
-                            </div>
-
-                            <div class="journal-entry">
-                                <div class="journal-date">1805.04.15</div>
-                                <div>
-                                    Three.js background rendering operational.
-                                    Geometric brutality manifests in real-time
-                                    through mathematical precision and visual
-                                    aggression.
-                                </div>
+                            <div class="journal-entry" style="font-size: 25px">
+                                <div class="journal-date">THEO</div>
+                                <div>I have been on a tour with LIPCRITIC.</div>
                             </div>
                         </div>
 
@@ -968,7 +953,7 @@
                                     margin-bottom: 12px;
                                 "
                             >
-                                SYSTEM_METRICS.INF
+                                TIME SINCE LAST FEED
                             </h2>
                             <div class="stats-grid">
                                 <div class="stat-item">
@@ -987,7 +972,7 @@
                                     NETWORK: <span id="network">ONLINE</span>
                                 </div>
                                 <div class="stat-item">
-                                    AUDIO: <span id="audio">NIN.WAV</span>
+                                    AUDIO: <span id="audio">HMLTD.WAV</span>
                                 </div>
                                 <div class="stat-item">
                                     PROCESSES: <span id="processes">13</span>
@@ -1003,7 +988,7 @@
                                     font-weight: bold;
                                 "
                             >
-                                INDUSTRIAL_EFFICIENCY: MAXIMUM
+                                GOTH ENERGY: 100%
                             </div>
                         </div>
 
@@ -1035,16 +1020,11 @@
                                     margin: 8px 0;
                                 "
                             >
-                                EMAIL: industrial_user@terminal.sys<br />
-                                IRC: #industrial_wasteland<br />
-                                ICQ: 1337666<br />
-                                AIM: IndustrialMachine98<br />
-                                MSN: hatred@hotmail.com
+                                EMAIL: happymealltd@gmail.com<br />
+                                INSTAGRAM: @hmltd
                             </div>
-                            <p style="margin-bottom: 12px">
-                                All communication will be processed through
-                                industrial filters. Emotional content will be
-                                converted to machine-readable format.
+                            <p style="margin-bottom: 12px; font-size: 25px">
+                                SEND US A MESSAGE!
                             </p>
                             <div class="industrial-btn">SEND_MESSAGE.EXE</div>
                         </div>
@@ -1054,95 +1034,6 @@
         </div>
 
         <script>
-            // THREE.JS BACKGROUND ANIMATION SYSTEM
-            let scene, camera, renderer, particles;
-
-            function initThreeJS() {
-                scene = new THREE.Scene();
-                camera = new THREE.PerspectiveCamera(
-                    75,
-                    window.innerWidth / window.innerHeight,
-                    0.1,
-                    1000,
-                );
-                renderer = new THREE.WebGLRenderer({
-                    alpha: true,
-                    antialias: true,
-                });
-                renderer.setSize(window.innerWidth, window.innerHeight);
-                renderer.setClearColor(0x000000, 0.3);
-                document
-                    .getElementById("background-canvas")
-                    .appendChild(renderer.domElement);
-
-                // CREATE INDUSTRIAL PARTICLE SYSTEM
-                const geometry = new THREE.BufferGeometry();
-                const particleCount = 200;
-                const positions = new Float32Array(particleCount * 3);
-                const velocities = new Float32Array(particleCount * 3);
-
-                for (let i = 0; i < particleCount * 3; i += 3) {
-                    positions[i] = (Math.random() - 0.5) * 50;
-                    positions[i + 1] = (Math.random() - 0.5) * 50;
-                    positions[i + 2] = (Math.random() - 0.5) * 50;
-
-                    velocities[i] = (Math.random() - 0.5) * 0.02;
-                    velocities[i + 1] = (Math.random() - 0.5) * 0.02;
-                    velocities[i + 2] = (Math.random() - 0.5) * 0.02;
-                }
-
-                geometry.setAttribute(
-                    "position",
-                    new THREE.BufferAttribute(positions, 3),
-                );
-                geometry.setAttribute(
-                    "velocity",
-                    new THREE.BufferAttribute(velocities, 3),
-                );
-
-                const material = new THREE.PointsMaterial({
-                    color: 0xcc0000,
-                    size: 2,
-                    transparent: true,
-                    opacity: 0.6,
-                });
-
-                particles = new THREE.Points(geometry, material);
-                scene.add(particles);
-
-                camera.position.z = 30;
-
-                animateThreeJS();
-            }
-
-            function animateThreeJS() {
-                requestAnimationFrame(animateThreeJS);
-
-                // ROTATE PARTICLE SYSTEM
-                particles.rotation.x += 0.001;
-                particles.rotation.y += 0.002;
-
-                // UPDATE PARTICLE POSITIONS
-                const positions = particles.geometry.attributes.position.array;
-                const velocities = particles.geometry.attributes.velocity.array;
-
-                for (let i = 0; i < positions.length; i += 3) {
-                    positions[i] += velocities[i];
-                    positions[i + 1] += velocities[i + 1];
-                    positions[i + 2] += velocities[i + 2];
-
-                    // WRAP AROUND BOUNDARIES
-                    if (Math.abs(positions[i]) > 25) velocities[i] *= -1;
-                    if (Math.abs(positions[i + 1]) > 25)
-                        velocities[i + 1] *= -1;
-                    if (Math.abs(positions[i + 2]) > 25)
-                        velocities[i + 2] *= -1;
-                }
-
-                particles.geometry.attributes.position.needsUpdate = true;
-                renderer.render(scene, camera);
-            }
-
             // TAB SWITCHING SYSTEM
             function switchTab(tabName) {
                 // HIDE ALL TAB CONTENTS
