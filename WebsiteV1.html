@@ -67,7 +67,7 @@
             /* WINDOW FRAME COMPONENTS */
             .window {
                 border: 2px outset var(--machine-black);
-                background: var(--steel-gray);
+                background-image: url("https://gifcity.carrd.co/assets/images/gallery63/e4d99638.gif?v=3fc8f5cd");
                 position: relative;
             }
 
@@ -91,8 +91,8 @@
             .control-btn {
                 width: 16px;
                 height: 14px;
-                background: var(--steel-gray);
-                border: 1px outset var(--steel-gray);
+                background-image: url("https://gifcity.carrd.co/assets/images/gallery73/23423cdb.jpg?v=3fc8f5cd");
+                border: 2px outset var(--steel-gray);
                 font-size: 8px;
                 font-weight: bold;
                 cursor: pointer;
@@ -147,7 +147,7 @@
             }
 
             .scrollbox::-webkit-scrollbar-thumb {
-                background: var(--dark-gray);
+                background-image: url("https://gifcity.carrd.co/assets/images/gallery63/e85d90a3.png?v=3fc8f5cd");
                 border: 1px outset var(--steel-gray);
             }
 
@@ -165,7 +165,7 @@
             .tab-header {
                 padding: 4px 12px;
                 background: var(--bright-red);
-                border: 2px outset var(--steel-gray);
+                border: 2px outset var(--bone-white);
                 border-bottom: none;
                 cursor: pointer;
                 font-weight: bold;
@@ -249,7 +249,7 @@
 
             /* INDUSTRIAL BUTTON STYLE */
             .industrial-btn {
-                background: var(--steel-gray);
+                background-image: url("https://gifcity.carrd.co/assets/images/gallery63/de4f317f.png?v=3fc8f5cd");
                 border: 2px outset var(--steel-gray);
                 padding: 4px 8px;
                 font-weight: bold;
@@ -408,7 +408,7 @@
             #glenplayer02 {
                 position: relative;
                 display: flex;
-                background: #c2c2c2;
+                background: black;
                 padding: 0.2em;
                 border: 3px solid;
                 border-style: inset;
@@ -565,13 +565,12 @@
                         <div id="spectrum-container"></div>
                     </div>
                 </div>
-
                 <!-- ========================================== -->
-                <!-- MUSIC PLAYER -->
+                <!-- MUSIC PLAYER - Glen Themes Style  -->
                 <!-- ========================================== -->
                 <div class="window" style="height: 80px; flex-shrink: 0">
                     <div class="window-header">
-                        <span>MUSIC_PLAYER.EXE</span>
+                        <span>COURT MUSIC</span>
                         <div class="window-controls">
                             <div class="control-btn">_</div>
                             <div class="control-btn">X</div>
@@ -587,32 +586,74 @@
                             padding: 4px;
                         "
                     >
-                        <!-- THE GLEN THEMES PLAYER -->
-                        <div id="glenplayer02" style="margin: 0; width: 100%">
-                            <div class="music-controls" onclick="songstart()">
-                                <div class="playy">d</div>
-                                <div class="pausee">k</div>
-                            </div>
-                            <div class="sonata">MP3</div>
-                            <div class="labeltext">
-                                <img
-                                    src="https://64.media.tumblr.com/tumblr_ll7wpyHlj71qi6qow.gif"
-                                />
-                                <span
-                                    style="
-                                        font-family: &quot;music&quot;;
-                                        font-size: 1.1em;
-                                        color: #f38bc8;
-                                        -webkit-text-stroke: 0.5px #000;
-                                        margin-top: -0.2em;
-                                        margin-bottom: 0.1em;
-                                    "
-                                    >o</span
-                                >
-                            </div>
+                        <div
+                            style="
+                                display: flex;
+                                align-items: center;
+                                gap: 8px;
+                                background: #c2c2c2;
+                                padding: 4px 8px;
+                                border: 3px inset;
+                            "
+                        >
+                            <button
+                                onclick="toggleAudio()"
+                                style="
+                                    background: none;
+                                    border: none;
+                                    font-family: &quot;music&quot;;
+                                    font-size: 20px;
+                                    cursor: pointer;
+                                    color: #f38bc8;
+                                    text-shadow: 0.5px 0.5px 0 #000;
+                                "
+                            >
+                                ▶
+                            </button>
+                            <span
+                                style="
+                                    font-family: &quot;Pixelated MS Sans Serif&quot;;
+                                    font-size: 0.75em;
+                                    color: #000;
+                                "
+                                >MP3</span
+                            >
+                            <img
+                                src="https://64.media.tumblr.com/tumblr_ll7wpyHlj71qi6qow.gif"
+                                style="height: 20px"
+                            />
+                            <span
+                                style="
+                                    font-family: &quot;music&quot;;
+                                    font-size: 1.1em;
+                                    color: #f38bc8;
+                                    text-shadow: 0.5px 0.5px 0 #000;
+                                "
+                                >o</span
+                            >
                         </div>
                     </div>
                 </div>
+
+                <audio
+                    id="myAudio"
+                    src="https://dl.dropboxusercontent.com/scl/fi/ztbjdqjeol6o076tdgjb1/WelcomeToTheFactory.wav?rlkey=222ofhx02vdu4h3xhpg390jy9&dl=0"
+                ></audio>
+
+                <script>
+                    let isPlaying = false;
+                    const audio = document.getElementById("myAudio");
+
+                    function toggleAudio() {
+                        if (isPlaying) {
+                            audio.pause();
+                            isPlaying = false;
+                        } else {
+                            audio.play();
+                            isPlaying = true;
+                        }
+                    }
+                </script>
                 <!-- CHAT TERMINAL -->
                 <div class="window" style="height: 160px">
                     <div class="window-header">
@@ -797,37 +838,34 @@
                         >
                             <h2
                                 style="
-                                    color: var(--blood-red);
+                                    color: var(--bright-red);
                                     margin-bottom: 12px;
+                                    font-size: 30px;
                                 "
                             >
-                                INDUSTRIAL_PROFILE_v2.1
+                                BIRTHPLACE OF THE INDUSTRIAL REVOLUTION
                             </h2>
-                            <p style="margin-bottom: 12px">
-                                Welcome to my digital wasteland. This terminal
-                                serves as an interface to the mechanical soul -
-                                a fusion of flesh and circuitry operating within
-                                the constraints of obsolete technology.
+                            <p style="margin-bottom: 12px; font-size: 20px">
+                                Blablablbalblablablbalbalbalbalblablablbalbalblablablablbalbalbalbalbalbalb.
                             </p>
-                            <p style="margin-bottom: 12px">
-                                <strong>SYSTEM SPECIFICATIONS:</strong><br />
-                                - CPU: HATRED.EXE<br />
-                                - RAM: INDUSTRIAL_MEMORIES.DLL<br />
-                                - GPU: VISUAL_BRUTALITY.SYS<br />
-                                - AUDIO: NINE_INCH_NAILS.WAV
+                            <p style="margin-bottom: 12px; font-size: 20px">
+                                <strong>WE MUST:</strong><br />
+                                - EUROPEAN VAMPIRES<br />
+                                - GOTHEDARMMERUNG<br />
+                                - FIENDS AND FIENDS<br />
+                                - AUDIO:CHATEAU VAMP FREESTYLE
                             </p>
-                            <p style="margin-bottom: 12px">
-                                This interface operates on deprecated Windows 98
-                                architecture, modified with industrial-grade
-                                brutality protocols. All visual elements are
-                                rendered in blood-red chromatic warfare against
-                                the mechanical darkness of the void.
+                            <p style="margin-bottom: 12px; font-size: 20px">
+                                Blablablbalblablablbalbalbalbalblablablbalbalblablablablbalbalbalbalbalbalb
+                                Blablablbalblablablbalbalbalbalblablablbalbalblablablablbalbalbalbalbalbalb.
+                                Blablablbalblablablbalbalbalbalblablablbalbalblablablablbalbalbalbalbalbalb.
+                                Blablablbalblablablbalbalbalbalblablablbalbalblablablablbalbalbalbalbalbalb..
                             </p>
                             <div
                                 class="industrial-btn glitch"
                                 style="margin-top: 16px"
                             >
-                                DOWNLOAD_SOUL.EXE
+                                DOWNLOAD_DARKSOULS.EXE
                             </div>
                         </div>
 
