@@ -4,7 +4,7 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>HMLTD</title>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
         <style>
             /* CORE SYSTEM FONTS AND VARIABLES */
             @import url("https://fonts.googleapis.com/css2?family=Courier+New&family=MS+Sans+Serif");
@@ -12,13 +12,14 @@
 
             :root {
                 --blood-red: #cc0000;
+                --bright-red: #ea0c0c;
                 --dark-red: #880000;
                 --machine-black: #000000;
                 --steel-gray: #c0c0c0;
                 --light-gray: #e0e0e0;
                 --dark-gray: #808080;
                 --terminal-green: #00ff00;
-                --bone-white: #f6f4f1;
+                --bone-white: #e8e4c9;
             }
 
             * {
@@ -31,6 +32,7 @@
             body {
                 font-family: "Times New Roman", Times, serif;
                 font-size: 11px;
+                font-style: italic;
                 background: var(--steel-gray);
                 overflow: hidden;
                 height: 100vh;
@@ -39,6 +41,7 @@
 
             /* THREE.JS BACKGROUND CONTAINER */
             #background-canvas {
+                background-image: url("https://raw.githubusercontent.com/duckidouk/WEBSITE/refs/heads/main/CONTENT/metalchains.gif");
                 position: fixed;
                 top: 0;
                 left: 0;
@@ -49,18 +52,15 @@
 
             /* WINDOW FRAME COMPONENTS */
             .window {
-                border: 2px outset var(--steel-gray);
+                border: 2px outset var(--machine-black);
                 background: var(--steel-gray);
                 position: relative;
             }
 
             .window-header {
-                background: linear-gradient(
-                    90deg,
-                    var(--dark-red) 0%,
-                    var(--blood-red) 100%
-                );
-                color: white;
+                background-image: url("https://gifcity.carrd.co/assets/images/gallery63/13e6956f.jpg?v=3fc8f5cd");
+
+                color: red;
                 padding: 2px 4px;
                 font-weight: bold;
                 display: flex;
@@ -197,7 +197,7 @@
             /* STATUS WIDGETS */
             .status-widget {
                 background: var(--machine-black);
-                color: var(--terminal-green);
+                color: var(--bone-white);
                 font-family: "Courier New", monospace;
                 padding: 4px;
                 border: 1px inset var(--steel-gray);
@@ -362,6 +362,14 @@
                 padding: 4px;
                 border: 2px inset var(--steel-gray);
             }
+            .divider-repeat {
+                background-repeat: repeat-x;
+                background-size: auto 100%;
+                height: 30px;
+                width: 100%;
+                flex-shrink: 0;
+                image-rendering: pixelated;
+            }
 
             /* RESPONSIVE DESIGN */
             @media (max-width: 768px) {
@@ -391,7 +399,7 @@
                 <!-- PROFILE WINDOW -->
                 <div class="window" style="height: 280px">
                     <div class="window-header">
-                        <span>USER_PROFILE.EXE</span>
+                        <span>THE BAND</span>
                         <div class="window-controls">
                             <div class="control-btn">_</div>
                             <div class="control-btn">□</div>
@@ -404,7 +412,7 @@
                             height: calc(100% - 20px);
                             padding: 8px;
                             text-align: center;
-                            background-image: url(&quot;https://raw.githubusercontent.com/duckidouk/WEBSITE/refs/heads/main/CONTENT/574dd32443cbc060e1183cd630baea97.gif&quot;);
+                            background-image: url(&quot;https://raw.githubusercontent.com/duckidouk/WEBSITE/refs/heads/main/CONTENT/screamos.gif&quot;);
                             background-size: cover;
                             background-position: center;
                         "
@@ -422,7 +430,7 @@
                         </div>
                         <div style="font-size: 10px; color: var(--bone-white)">
                             <div>STATUS: BLOODY</div>
-                            <div>LOCATION: TRANSYLVANIA</div>
+                            <div>LOCATION: LONDON</div>
                             <div>UPTIME: 72:14:33</div>
                             <div>FANGS: 26/10/26</div>
                         </div>
@@ -437,7 +445,7 @@
                 <!-- STATUS WIDGET -->
                 <div class="window" style="height: 100px">
                     <div class="window-header">
-                        <span>SYSTEM_STATUS.DLL</span>
+                        <span>NEXT RELEASE</span>
                         <div class="window-controls">
                             <div class="control-btn">_</div>
                             <div class="control-btn">X</div>
@@ -447,16 +455,14 @@
                         class="status-widget"
                         style="height: calc(100% - 20px); overflow: hidden"
                     >
-                        <div id="status-text">
-                            INITIATING NEURAL INTERFACE...
-                        </div>
+                        <div id="status-text">BLITZKRIEG...</div>
                     </div>
                 </div>
 
                 <!-- SPECTRUM ANALYZER -->
                 <div class="window" style="height: 120px">
                     <div class="window-header">
-                        <span>AUDIO_SPECTRUM.EXE</span>
+                        <span>HATE MUSIC LAST TIME DELETE</span>
                         <div class="window-controls">
                             <div class="control-btn">_</div>
                             <div class="control-btn">X</div>
@@ -470,7 +476,7 @@
                 <!-- CHAT TERMINAL -->
                 <div class="window" style="height: 160px">
                     <div class="window-header">
-                        <span>IRC_TERMINAL.EXE</span>
+                        <span>CRUCIFIED_TERMINAL.EXE</span>
                         <div class="window-controls">
                             <div class="control-btn">_</div>
                             <div class="control-btn">X</div>
@@ -478,37 +484,88 @@
                     </div>
                     <div class="chat-widget" style="height: calc(100% - 20px)">
                         <div id="chat-content">
-                            <div>&gt; USER_CONNECTED</div>
+                            <div>&gt; GOTH_CONNECTED</div>
                             <div>&gt; DOWNLOADING_HATRED.EXE</div>
-                            <div>&gt; LOADING_INDUSTRIAL_CACHE...</div>
-                            <div>&gt; SYSTEM_READY</div>
+                            <div>&gt; LOADING_GOTH_CACHE...</div>
+                            <div>&gt; SYSTEM_BLOODY</div>
                         </div>
                     </div>
                 </div>
             </div>
 
             <!-- MAIN CONTENT AREA -->
-            <div class="main-content">
+            <div
+                class="main-content"
+                style="display: flex; flex-direction: column; gap: 4px"
+            >
                 <!-- NAVIGATION BAR -->
-                <div class="window" style="height: 40px">
-                    <div class="window-header">
-                        <span>NAVIGATION.SYS</span>
-                        <div class="window-controls">
-                            <div class="control-btn">_</div>
-                            <div class="control-btn">X</div>
-                        </div>
+                <div class="window" style="height: 100px; flex-shrink: 0">
+                    <div
+                        class="window-header"
+                        style="
+                            position: relative;
+                            overflow: visible;
+                            padding: 10px 4px;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                        "
+                    >
+                        <span
+                            style="
+                                font-family:
+                                    &quot;Monsieur La Doulaise&quot;, cursive;
+                                font-size: 35px;
+                                line-height: 1;
+                            "
+                            >Fangs</span
+                        >
+                        <div class="window-controls"></div>
                     </div>
                 </div>
 
+                <!-- DIVIDER 1 - Repeating horizontally -->
+                <div
+                    class="divider-repeat"
+                    style="
+                        background-image: url(&quot;https://gifcity.carrd.co/assets/images/gallery39/6130186d.gif?v=3fc8f5cd&quot;);
+                    "
+                ></div>
+
+                <!-- DIVIDER 2 - Repeating horizontally with different height -->
+                <div
+                    class="divider-repeat"
+                    style="
+                        background-image: url(&quot;https://gifcity.carrd.co/assets/images/gallery39/a773466e.gif?v=3fc8f5cd&quot;);
+                        height: 40px;
+                    "
+                ></div>
                 <!-- TABBED CONTENT AREA -->
+
                 <div class="window" style="flex: 1">
-                    <div class="window-header">
-                        <span>CONTENT_MANAGER.EXE</span>
-                        <div class="window-controls">
-                            <div class="control-btn">_</div>
-                            <div class="control-btn">□</div>
-                            <div class="control-btn">X</div>
-                        </div>
+                    <div
+                        class="window-header"
+                        style="
+                            position: relative;
+                            overflow: visible;
+                            padding: 10px 4px;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                        "
+                    >
+                        <span
+                            style="
+                                font-family:
+                                    &quot;Monsieur La Doulaise&quot;, cursive;
+                                font-size: 35px;
+                                position: absolute;
+                                left: 50%;
+                                transform: translateX(-50%);
+                            "
+                            >Scripture</span
+                        >
+                        <div class="window-controls"></div>
                     </div>
                     <div
                         class="tab-container"
@@ -519,31 +576,31 @@
                                 class="tab-header active"
                                 onclick="switchTab('about')"
                             >
-                                ABOUT.TXT
+                                TESTAMENT
                             </div>
                             <div
                                 class="tab-header"
                                 onclick="switchTab('journal')"
                             >
-                                JOURNAL.LOG
+                                JOURNALS
                             </div>
                             <div
                                 class="tab-header"
                                 onclick="switchTab('gallery')"
                             >
-                                GALLERY.DIR
+                                WUNDERKAMMER
                             </div>
                             <div
                                 class="tab-header"
                                 onclick="switchTab('stats')"
                             >
-                                SYSTEM.INF
+                                SYSTEM
                             </div>
                             <div
                                 class="tab-header"
                                 onclick="switchTab('contact')"
                             >
-                                CONTACT.VCF
+                                CONTACT
                             </div>
                         </div>
 
@@ -626,7 +683,7 @@
                             </div>
 
                             <div class="journal-entry">
-                                <div class="journal-date">1998.04.01</div>
+                                <div class="journal-date">1805.04.01</div>
                                 <div>
                                     Implemented neural chat protocols. The
                                     terminal speaks in machine language,
@@ -636,7 +693,7 @@
                             </div>
 
                             <div class="journal-entry">
-                                <div class="journal-date">1998.04.15</div>
+                                <div class="journal-date">1805.04.15</div>
                                 <div>
                                     Three.js background rendering operational.
                                     Geometric brutality manifests in real-time
