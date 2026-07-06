@@ -18,6 +18,7 @@
                 --light-gray: #e0e0e0;
                 --dark-gray: #808080;
                 --terminal-green: #00ff00;
+                --bone-white: #f6f4f1;
             }
 
             * {
@@ -318,7 +319,7 @@
                     var(--machine-black),
                     var(--dark-red)
                 );
-                border: 2px outset var(--steel-gray);
+                border: 2px outset var(--bone-white);
                 display: flex;
                 align-items: center;
                 justify-content: center;
@@ -403,16 +404,23 @@
                             height: calc(100% - 20px);
                             padding: 8px;
                             text-align: center;
-                            background-image: url(&quot;https://i.postimg.cc/Wz9bW9Rk/574dd32443cbc060e1183cd630baea97.gif&quot;);
+                            background-image: url(&quot;https://raw.githubusercontent.com/duckidouk/WEBSITE/refs/heads/main/CONTENT/574dd32443cbc060e1183cd630baea97.gif&quot;);
                             background-size: cover;
                             background-position: center;
                         "
                     >
                         <div class="profile-avatar pulse-red">HMLTD</div>
-                        <div style="font-weight: bold; margin: 8px 0">
+                        <div
+                            style="
+                                font-weight: bold;
+                                color: var(--bone-white);
+                                font-style: italic;
+                                margin: 30px 0;
+                            "
+                        >
                             GOTHEDAMERRUNG
                         </div>
-                        <div style="font-size: 10px; color: var(--dark-red)">
+                        <div style="font-size: 10px; color: var(--bone-white)">
                             <div>STATUS: BLOODY</div>
                             <div>LOCATION: TRANSYLVANIA</div>
                             <div>UPTIME: 72:14:33</div>
