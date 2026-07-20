@@ -1,0 +1,1185 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>HMLTD</title>
+
+        <style>
+            /* CORE SYSTEM FONTS AND VARIABLES */
+            @import url("https://fonts.googleapis.com/css2?family=Courier+New&family=MS+Sans+Serif");
+            @import url("https://fonts.googleapis.com/css2?family=Monsieur+La+Doulaise&display=swap");
+
+            @font-face {
+                font-family: "music";
+                src: url(https://cdn.glitch.me/9bbfdfb3-4bfa-4c39-8743-5621c8b9df21/LL_RECOR.TTF);
+            }
+
+            @font-face {
+                font-family: "Pixelated MS Sans Serif";
+                src:
+                    url("ms_sans_serif.woff2") format("woff2"),
+                    url("ms_sans_serif.woff") format("woff");
+                font-weight: normal;
+                font-style: normal;
+            }
+
+            :root {
+                --blood-red: #cc0000;
+                --bright-red: #ea0c0c;
+                --dark-red: #880000;
+                --machine-black: #000000;
+                --steel-gray: #c0c0c0;
+                --light-gray: #e0e0e0;
+                --dark-gray: #808080;
+                --terminal-green: #00ff00;
+                --bone-white: #e8e4c9;
+            }
+
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+
+            /* WINDOWS 98 UI FRAMEWORK */
+            body {
+                font-family: "Times New Roman", Times, serif;
+                font-size: 11px;
+                font-style: italic;
+                background: var(--steel-gray);
+                overflow: hidden;
+                height: 100vh;
+                color: var(--machine-black);
+            }
+
+            #background-canvas {
+                background-image: url("https://raw.githubusercontent.com/duckidouk/WEBSITE/refs/heads/main/CONTENT/falling.jpg");
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                z-index: -1;
+            }
+
+            /* WINDOW FRAME COMPONENTS */
+
+            /* BACKGROUND: BLOOD*/
+            .window {
+                border: 2px outset var(--machine-black);
+                background-image: url("https://gifcity.carrd.co/assets/images/gallery63/e4d99638.gif?v=3fc8f5cd");
+                position: relative;
+            }
+            /* BACKGROUND: MUD RED*/
+            .window-header {
+                background-image: url("https://gifcity.carrd.co/assets/images/gallery63/13e6956f.jpg?v=3fc8f5cd");
+
+                color: red;
+                padding: 2px 4px;
+                font-weight: bold;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                cursor: move;
+            }
+
+            .window-controls {
+                display: flex;
+                gap: 2px;
+            }
+            /* BACKGROUND: CROSS WHITE*/
+            .control-btn {
+                width: 16px;
+                height: 14px;
+                background-image: url("https://gifcity.carrd.co/assets/images/gallery73/23423cdb.jpg?v=3fc8f5cd");
+                border: 2px outset var(--steel-gray);
+                font-size: 8px;
+                font-weight: bold;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .control-btn:active {
+                border: 1px inset var(--steel-gray);
+            }
+
+            /* MAIN LAYOUT GRID */
+            .desktop {
+                display: flex;
+                height: 100vh;
+                gap: 4px;
+                padding: 4px;
+            }
+
+            /* SIDEBAR DESIGN */
+            .sidebar {
+                width: 280px;
+                display: flex;
+                flex-direction: column;
+                gap: 4px;
+            }
+
+            /* MAIN CONTENT AREA */
+            .main-content {
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+                gap: 4px;
+            }
+
+            /* SCROLLABLE CONTENT BOXES */
+            .scrollbox {
+                background: white;
+                border: 2px inset var(--blood-red);
+                overflow-y: auto;
+                scrollbar-color: var(--bright-red) var(--bone-white);
+                scrollbar-width: thin;
+            }
+
+            .scrollbox::-webkit-scrollbar {
+                width: 16px;
+            }
+
+            .scrollbox::-webkit-scrollbar-track {
+                background: var(--light-gray);
+            }
+            /* BACKGROUND: PAPER RED*/
+            .scrollbox::-webkit-scrollbar-thumb {
+                background-image: url("https://gifcity.carrd.co/assets/images/gallery63/e85d90a3.png?v=3fc8f5cd");
+                border: 1px outset var(--steel-gray);
+            }
+
+            /* TAB SYSTEM */
+            .tab-container {
+                background: var(--bone-white);
+            }
+
+            .tab-headers {
+                display: flex;
+                background: var(--machine-black);
+                border-bottom: 2px inset var(--bright-red);
+            }
+
+            .tab-header {
+                padding: 4px 12px;
+                background: var(--bright-red);
+                border: 2px outset var(--bone-white);
+                border-bottom: none;
+                cursor: pointer;
+                font-weight: bold;
+                margin-right: 2px;
+            }
+            /* BACKGROUND: STAR RED*/
+            .tab-header.active {
+                background-image: url("https://gifcity.carrd.co/assets/images/gallery63/5780db63.gif?v=3fc8f5cd");
+                border: 2px inset var(--blood-red);
+                border-bottom: 2px solid purple;
+            }
+            /* red mud*/
+            .tab-content {
+                padding: 8px;
+                background-image: url("https://gifcity.carrd.co/assets/images/gallery63/e85d90a3.png?v=3fc8f5cd");
+
+                min-height: 200px;
+                display: none;
+            }
+
+            .tab-content.active {
+                display: block;
+            }
+
+            /* PROFILE SECTION */
+            .profile-avatar {
+                width: 100px;
+                height: 100px;
+                background-image: url("https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fcdn.pixabay.com%2Fphoto%2F2016%2F04%2F01%2F11%2F18%2Fanimal-1300290_1280.png&f=1&nofb=1&ipt=fc6ac54c09befda9c5db5286d029622e20004f2c61040ccf580cbe5ab594ab47");
+                background-size: cover;
+                background-position: center;
+                border: 2px inset var(--steel-gray);
+                margin: 8px auto;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: var(--blood-red);
+                font-weight: bold;
+                font-size: 24px;
+                font-family: "Times New Roman", Times, serif;
+                font-style: italic;
+            }
+
+            /* STATUS WIDGETS */
+            .status-widget {
+                background: var(--machine-black);
+                color: var(--bone-white);
+                font-family: "Courier New", monospace;
+                padding: 4px;
+                border: 1px inset var(--steel-gray);
+                margin: 4px 0;
+            }
+
+            /* ANIMATION WIDGETS */
+            .anim-widget {
+                height: 60px;
+                background: var(--machine-black);
+                border: 2px inset var(--steel-gray);
+                position: relative;
+                overflow: hidden;
+                margin: 4px 0;
+            }
+
+            .spectrum-bar {
+                position: absolute;
+                bottom: 0;
+                width: 4px;
+                background: var(--blood-red);
+                animation: spectrum 2s infinite ease-in-out;
+            }
+
+            @keyframes spectrum {
+                0%,
+                100% {
+                    height: 20%;
+                }
+                50% {
+                    height: 80%;
+                }
+            }
+
+            /* INDUSTRIAL BUTTON STYLE */
+            .industrial-btn {
+                background-image: url("https://gifcity.carrd.co/assets/images/gallery63/de4f317f.png?v=3fc8f5cd");
+                border: 2px outset var(--steel-gray);
+                padding: 4px 8px;
+                font-weight: bold;
+                cursor: pointer;
+                margin: 2px;
+                transition: all 0.1s;
+            }
+
+            .industrial-btn:hover {
+                background: var(--light-gray);
+            }
+
+            .industrial-btn:active {
+                border: 2px inset var(--steel-gray);
+            }
+
+            /* GLITCH EFFECTS */
+            .glitch {
+                animation: glitch 0.3s infinite;
+            }
+
+            @keyframes glitch {
+                0% {
+                    transform: translate(0);
+                }
+                20% {
+                    transform: translate(-2px, 2px);
+                }
+                40% {
+                    transform: translate(-2px, -5px);
+                }
+                60% {
+                    transform: translate(2px, 2px);
+                }
+                80% {
+                    transform: translate(2px, -2px);
+                }
+                100% {
+                    transform: translate(0);
+                }
+            }
+
+            /* PULSING RED EFFECT */
+            .pulse-red {
+                animation: pulse-red 1.5s infinite;
+            }
+
+            @keyframes pulse-red {
+                0%,
+                100% {
+                    color: var(--blood-red);
+                }
+                50% {
+                    color: var(--dark-red);
+                }
+            }
+
+            /* JOURNAL ENTRIES */
+            .journal-entry {
+                border-bottom: 1px solid var(--dark-gray);
+                padding: 8px 0;
+                margin: 4px 0;
+            }
+
+            .journal-date {
+                font-weight: bold;
+                color: var(--dark-red);
+            }
+
+            /* GALLERY GRID */
+            .gallery-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+                gap: 8px;
+                padding: 8px;
+            }
+
+            .gallery-item {
+                height: 100px;
+                background: linear-gradient(
+                    45deg,
+                    var(--machine-black),
+                    var(--dark-red)
+                );
+                border: 2px outset var(--bone-white);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: var(--blood-red);
+                font-weight: bold;
+                cursor: pointer;
+                transition: all 0.2s;
+            }
+
+            .gallery-item:hover {
+                transform: scale(1.05);
+                border: 2px inset var(--steel-gray);
+            }
+
+            /* STATS DISPLAY */
+            .stats-grid {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 4px;
+                padding: 8px;
+            }
+
+            .stat-item {
+                background: var(--machine-black);
+                color: var(--terminal-green);
+                padding: 4px;
+                border: 1px solid var(--dark-gray);
+                font-family: "Courier New", monospace;
+                font-size: 10px;
+            }
+
+            /* CHAT WIDGET */
+            .chat-widget {
+                background: var(--machine-black);
+                color: var(--terminal-green);
+                font-family: "Courier New", monospace;
+                font-size: 10px;
+                height: 120px;
+                overflow-y: auto;
+                padding: 4px;
+                border: 2px inset var(--steel-gray);
+            }
+            .divider-repeat {
+                background-repeat: repeat-x;
+                background-size: auto 100%;
+                height: 30px;
+                width: 100%;
+                flex-shrink: 0;
+                image-rendering: pixelated;
+            }
+
+            /* RESPONSIVE DESIGN */
+            @media (max-width: 768px) {
+                .desktop {
+                    flex-direction: column;
+                }
+
+                .sidebar {
+                    width: 100%;
+                    order: 2;
+                }
+
+                .main-content {
+                    order: 1;
+                }
+            }
+
+            /* ========================================== */
+            /* MUSIC PLAYER BY GLENTHEMES                 */
+            /* ========================================== */
+            #glenplayer02 {
+                position: relative;
+                display: flex;
+                background: black;
+                padding: 0.2em;
+                border: 3px solid;
+                border-style: inset;
+                margin: auto;
+                margin-top: 0.5em;
+                margin-bottom: 0.5em;
+                width: auto;
+            }
+
+            #glenplayer02 a {
+                text-decoration: none;
+            }
+
+            #glenplayer02 > div {
+                align-self: center;
+                -webkit-align-self: center;
+            }
+
+            .music-controls {
+                user-select: none;
+                -webkit-user-select: none;
+                width: 13px;
+                font-size: 18px;
+                cursor: pointer;
+                font-family: "music";
+            }
+
+            .playy,
+            .pausee {
+                font-family: "music";
+                font-size: 1.1em;
+                color: #f38bc8;
+                -webkit-text-stroke: 0.5px #000;
+                margin-top: -0.2em;
+                margin-bottom: 0.1em;
+            }
+
+            .pausee {
+                display: none;
+            }
+
+            .sonata {
+                margin-left: 0.4em;
+                font-family: "Pixelated MS Sans Serif";
+                font-size: 0.75em;
+                color: #000;
+            }
+
+            .labeltext {
+                margin-left: 0.5em;
+                position: relative;
+                bottom: 0.1em;
+                font-size: 14px;
+            }
+        </style>
+
+        <!-- FONTS -->
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;500;800&display=swap"
+            rel="stylesheet"
+        />
+
+        <!-- SCRIPTS -->
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
+        <script src="//static.tumblr.com/gtjt4bo/QRmphdsdv/glenplayer02.js"></script>
+        <script
+            src="https://kit.fontawesome.com/8119dfca45.js"
+            crossorigin="anonymous"
+        ></script>
+    </head>
+    <body>
+        <!-- THREE.JS BACKGROUND CONTAINER -->
+        <div id="background-canvas"></div>
+
+        <!-- MAIN DESKTOP INTERFACE -->
+        <div class="desktop">
+            <!-- LEFT SIDEBAR -->
+            <div class="sidebar">
+                <!-- PROFILE WINDOW -->
+                <div class="window" style="height: 280px">
+                    <div class="window-header">
+                        <span>THE BAND</span>
+                        <div class="window-controls">
+                            <div class="control-btn">_</div>
+                            <div class="control-btn">□</div>
+                            <div class="control-btn">X</div>
+                        </div>
+                    </div>
+                    <div
+                        class="scrollbox"
+                        style="
+                            height: calc(100% - 20px);
+                            padding: 8px;
+                            text-align: center;
+                            background-image: url(&quot;https://raw.githubusercontent.com/duckidouk/WEBSITE/refs/heads/main/CONTENT/screamos.gif&quot;);
+                            background-size: cover;
+                            background-position: center;
+                        "
+                    >
+                        <div class="profile-avatar pulse-red">HMLTD</div>
+                        <div
+                            style="
+                                font-weight: bold;
+                                color: var(--bone-white);
+                                font-style: italic;
+                                margin: 30px 0;
+                            "
+                        >
+                            GOTHEDAMERRUNG
+                        </div>
+                        <div style="font-size: 10px; color: var(--bone-white)">
+                            <div>STATUS: BLOODY</div>
+                            <div>LOCATION: LONDON</div>
+                            <div>UPTIME: 72:14:33</div>
+                            <div>FANGS: 26/10/26</div>
+                        </div>
+                        <div style="margin: 12px 0">
+                            <div class="industrial-btn">MESSAGE</div>
+                            <div class="industrial-btn">LET ME EMAIL YOU</div>
+                            <div class="industrial-btn">MERCH</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- STATUS WIDGET -->
+                <div class="window" style="height: 100px">
+                    <div class="window-header">
+                        <span>SYSTEM_STATUS.DLL</span>
+                        <div class="window-controls">
+                            <div class="control-btn">_</div>
+                            <div class="control-btn">X</div>
+                        </div>
+                    </div>
+                    <div
+                        class="status-widget"
+                        style="height: calc(100% - 20px); overflow: hidden"
+                    >
+                        <div id="status-text">BLITZKRIEG...</div>
+                    </div>
+                </div>
+
+                <!-- SPECTRUM ANALYZER -->
+                <div class="window" style="height: 120px">
+                    <div class="window-header">
+                        <span>HATE MUSIC LAST TIME DELETE</span>
+                        <div class="window-controls">
+                            <div class="control-btn">_</div>
+                            <div class="control-btn">X</div>
+                        </div>
+                    </div>
+                    <div class="anim-widget" style="height: calc(100% - 20px)">
+                        <div id="spectrum-container"></div>
+                    </div>
+                </div>
+                <!-- ========================================== -->
+                <!-- MUSIC PLAYER - Glen Themes Style  -->
+                <!-- ========================================== -->
+                <div class="window" style="height: 80px; flex-shrink: 0">
+                    <div class="window-header">
+                        <span>COURT MUSIC</span>
+                        <div class="window-controls">
+                            <div class="control-btn">_</div>
+                            <div class="control-btn">X</div>
+                        </div>
+                    </div>
+                    <div
+                        style="
+                            height: calc(100% - 20px);
+                            background: var(--steel-gray);
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            padding: 4px;
+                        "
+                    >
+                        <div
+                            style="
+                                display: flex;
+                                align-items: center;
+                                gap: 8px;
+                                background: #c2c2c2;
+                                padding: 4px 8px;
+                                border: 3px inset;
+                            "
+                        >
+                            <button
+                                onclick="toggleAudio()"
+                                style="
+                                    background: none;
+                                    border: none;
+                                    font-family: &quot;music&quot;;
+                                    font-size: 20px;
+                                    cursor: pointer;
+                                    color: #f38bc8;
+                                    text-shadow: 0.5px 0.5px 0 #000;
+                                "
+                            >
+                                ▶
+                            </button>
+                            <span
+                                style="
+                                    font-family: &quot;Pixelated MS Sans Serif&quot;;
+                                    font-size: 0.75em;
+                                    color: #000;
+                                "
+                                >MP3</span
+                            >
+                            <img
+                                src="https://64.media.tumblr.com/tumblr_ll7wpyHlj71qi6qow.gif"
+                                style="height: 20px"
+                            />
+                            <span
+                                style="
+                                    font-family: &quot;music&quot;;
+                                    font-size: 1.1em;
+                                    color: #f38bc8;
+                                    text-shadow: 0.5px 0.5px 0 #000;
+                                "
+                                >o</span
+                            >
+                        </div>
+                    </div>
+                </div>
+
+                <audio
+                    id="myAudio"
+                    src="https://raw.githubusercontent.com/duckidouk/WEBSITE/main/CONTENT/a_confession.mp3"
+                ></audio>
+
+                <script>
+                    let isPlaying = false;
+                    const audio = document.getElementById("myAudio");
+
+                    function toggleAudio() {
+                        if (isPlaying) {
+                            audio.pause();
+                            isPlaying = false;
+                        } else {
+                            audio.play();
+                            isPlaying = true;
+                        }
+                    }
+                </script>
+                <!-- CHAT TERMINAL -->
+                <div class="window" style="height: 160px">
+                    <div class="window-header">
+                        <span>CRUCIFIED_TERMINAL</span>
+                        <div class="window-controls">
+                            <div class="control-btn">_</div>
+                            <div class="control-btn">X</div>
+                        </div>
+                    </div>
+                    <div class="chat-widget" style="height: calc(100% - 20px)">
+                        <div id="chat-content">
+                            <div>&gt; GOTH_CONNECTED</div>
+                            <div>&gt; DOWNLOADING_HATRED.EXE</div>
+                            <div>&gt; LOADING_GOTH_CACHE...</div>
+                            <div>&gt; SYSTEM_BLOODY</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- GIF UNDERNEATH CHAT TERMINAL -->
+                <div
+                    style="
+                        height: 50px;
+
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        padding: 4px;
+                        flex-shrink: 0;
+                    "
+                >
+                    <img
+                        src="https://raw.githubusercontent.com/duckidouk/WEBSITE/refs/heads/main/CONTENT/num.gif"
+                        alt="GIF"
+                        style="
+                            height: 100%;
+                            width: auto;
+                            image-rendering: pixelated;
+                            display: block;
+                        "
+                    />
+                </div>
+                <div
+                    style="
+                        height: 50px;
+
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        padding: 4px;
+                        flex-shrink: 0;
+                    "
+                >
+                    <img
+                        src="https://gifcity.carrd.co/assets/images/gallery47/65cbe5d6.gif?v=3fc8f5cd"
+                        alt="GIF"
+                        style="
+                            height: 100%;
+                            width: auto;
+                            image-rendering: pixelated;
+                            display: block;
+                        "
+                    />
+                </div>
+            </div>
+            <!-- MAIN CONTENT AREA -->
+            <div
+                class="main-content"
+                style="display: flex; flex-direction: column; gap: 4px"
+            >
+                <!-- NAVIGATION BAR -->
+                <div class="window" style="height: 100px; flex-shrink: 0">
+                    <div
+                        class="window-header"
+                        style="
+                            position: relative;
+                            overflow: visible;
+                            padding: 10px 4px;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                        "
+                    >
+                        <span
+                            style="
+                                font-family:
+                                    &quot;Monsieur La Doulaise&quot;, cursive;
+                                font-size: 35px;
+                                line-height: 1;
+                            "
+                            >Fangs</span
+                        >
+                        <div class="window-controls"></div>
+                    </div>
+                </div>
+
+                <!-- DIVIDER 1 - Repeating horizontally -->
+                <div
+                    class="divider-repeat"
+                    style="
+                        background-image: url(&quot;https://gifcity.carrd.co/assets/images/gallery39/6130186d.gif?v=3fc8f5cd&quot;);
+                    "
+                ></div>
+
+                <!-- DIVIDER 2 - Repeating horizontally with different height -->
+                <div
+                    class="divider-repeat"
+                    style="
+                        background-image: url(&quot;https://gifcity.carrd.co/assets/images/gallery39/a773466e.gif?v=3fc8f5cd&quot;);
+                        height: 40px;
+                    "
+                ></div>
+                <!-- TABBED CONTENT AREA -->
+
+                <div class="window" style="flex: 1">
+                    <div
+                        class="window-header"
+                        style="
+                            position: relative;
+                            overflow: visible;
+                            padding: 30px 4px;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                        "
+                    >
+                        <span
+                            style="
+                                font-family:
+                                    &quot;Monsieur La Doulaise&quot;, cursive;
+                                font-size: 35px;
+                                position: absolute;
+                                left: 50%;
+                                transform: translateX(-50%);
+                            "
+                            >Scripture</span
+                        >
+                        <div class="window-controls"></div>
+                    </div>
+                    <div
+                        class="tab-container"
+                        style="height: calc(100% - 20px)"
+                    >
+                        <div class="tab-headers">
+                            <div
+                                class="tab-header active"
+                                onclick="switchTab('about')"
+                            >
+                                TESTAMENT
+                            </div>
+                            <div
+                                class="tab-header"
+                                onclick="switchTab('journal')"
+                            >
+                                JOURNALS
+                            </div>
+                            <div
+                                class="tab-header"
+                                onclick="switchTab('gallery')"
+                            >
+                                WUNDERKAMMER
+                            </div>
+                            <div
+                                class="tab-header"
+                                onclick="switchTab('stats')"
+                            >
+                                SYSTEM
+                            </div>
+                            <div
+                                class="tab-header"
+                                onclick="switchTab('contact')"
+                            >
+                                CONTACT
+                            </div>
+                        </div>
+
+                        <!-- ABOUT TAB -->
+                        <div
+                            class="tab-content active scrollbox"
+                            id="about"
+                            style="height: calc(100% - 40px)"
+                        >
+                            <h2
+                                style="
+                                    color: var(--bright-red);
+                                    margin-bottom: 12px;
+                                    font-size: 30px;
+                                "
+                            >
+                                BIRTHPLACE OF THE INDUSTRIAL REVOLUTION
+                            </h2>
+                            <p style="margin-bottom: 12px; font-size: 20px">
+                                Blablablbalblablablbalbalbalbalblablablbalbalblablablablbalbalbalbalbalbalb.
+                            </p>
+                            <p style="margin-bottom: 12px; font-size: 20px">
+                                <strong>WE MUST:</strong><br />
+                                - EUROPEAN VAMPIRES<br />
+                                - GOTHEDARMMERUNG<br />
+                                - FIENDS AND FIENDS<br />
+                                - AUDIO:CHATEAU VAMP FREESTYLE
+                            </p>
+                            <p style="margin-bottom: 12px; font-size: 20px">
+                                Blablablbalblablablbalbalbalbalblablablbalbalblablablablbalbalbalbalbalbalb
+                                Blablablbalblablablbalbalbalbalblablablbalbalblablablablbalbalbalbalbalbalb.
+                                Blablablbalblablablbalbalbalbalblablablbalbalblablablablbalbalbalbalbalbalb.
+                                Blablablbalblablablbalbalbalbalblablablbalbalblablablablbalbalbalbalbalbalb..
+                            </p>
+                            <div
+                                class="industrial-btn glitch"
+                                style="margin-top: 16px"
+                            >
+                                DOWNLOAD_DARKSOULS.EXE
+                            </div>
+                        </div>
+
+                        <!-- JOURNAL TAB -->
+                        <div
+                            class="tab-content scrollbox glitch"
+                            id="journal"
+                            style="height: calc(100% - 40px)"
+                        >
+                            <h2
+                                style="
+                                    color: var(--blood-red);
+                                    margin-bottom: 12px;
+                                "
+                            >
+                                BAND JOURNAL
+                            </h2>
+
+                            <div class="journal-entry" style="font-size: 25px">
+                                <div class="journal-date">HENRY</div>
+                                <div>I have been doing Blitzkrieg video.</div>
+                            </div>
+
+                            <div class="journal-entry" style="font-size: 25px">
+                                <div class="journal-date">ANDREI</div>
+                                <div>
+                                    I have been on a tour with my friends to
+                                    France.
+                                </div>
+                            </div>
+
+                            <div class="journal-entry" style="font-size: 25px">
+                                <div class="journal-date">DUC</div>
+                                <div>
+                                    Just came back from a wedding in croatia.
+                                </div>
+                            </div>
+
+                            <div class="journal-entry" style="font-size: 25px">
+                                <div class="journal-date">THEO</div>
+                                <div>I have been on a tour with LIPCRITIC.</div>
+                            </div>
+                        </div>
+
+                        <!-- GALLERY TAB -->
+                        <div
+                            class="tab-content scrollbox"
+                            id="gallery"
+                            style="height: calc(100% - 40px)"
+                        >
+                            <h2
+                                style="
+                                    color: var(--blood-red);
+                                    margin-bottom: 12px;
+                                "
+                            >
+                                VISUAL_ARCHIVE.DIR
+                            </h2>
+                            <div class="gallery-grid">
+                                <div class="gallery-item">IMG_001</div>
+                                <div class="gallery-item">IMG_002</div>
+                                <div class="gallery-item">IMG_003</div>
+                                <div class="gallery-item">IMG_004</div>
+                                <div class="gallery-item">IMG_005</div>
+                                <div class="gallery-item">IMG_006</div>
+                                <div class="gallery-item">IMG_007</div>
+                                <div class="gallery-item">IMG_008</div>
+                                <div class="gallery-item">IMG_009</div>
+                                <div class="gallery-item">IMG_010</div>
+                                <div class="gallery-item">IMG_011</div>
+                                <div class="gallery-item">IMG_012</div>
+                            </div>
+                        </div>
+
+                        <!-- STATS TAB -->
+                        <div
+                            class="tab-content scrollbox"
+                            id="stats"
+                            style="height: calc(100% - 40px)"
+                        >
+                            <h2
+                                style="
+                                    color: var(--blood-red);
+                                    margin-bottom: 12px;
+                                "
+                            >
+                                TIME SINCE LAST FEED
+                            </h2>
+                            <div class="stats-grid">
+                                <div class="stat-item">
+                                    UPTIME: <span id="uptime">72:14:33</span>
+                                </div>
+                                <div class="stat-item">
+                                    CPU_USAGE: <span id="cpu">98%</span>
+                                </div>
+                                <div class="stat-item">
+                                    MEMORY: <span id="memory">666MB</span>
+                                </div>
+                                <div class="stat-item">
+                                    DISK_USAGE: <span id="disk">100%</span>
+                                </div>
+                                <div class="stat-item">
+                                    NETWORK: <span id="network">ONLINE</span>
+                                </div>
+                                <div class="stat-item">
+                                    AUDIO: <span id="audio">HMLTD.WAV</span>
+                                </div>
+                                <div class="stat-item">
+                                    PROCESSES: <span id="processes">13</span>
+                                </div>
+                                <div class="stat-item">
+                                    TEMPERATURE: <span id="temp">85°C</span>
+                                </div>
+                            </div>
+                            <div
+                                style="
+                                    margin-top: 16px;
+                                    color: var(--blood-red);
+                                    font-weight: bold;
+                                "
+                            >
+                                GOTH ENERGY: 100%
+                            </div>
+                        </div>
+
+                        <!-- CONTACT TAB -->
+                        <div
+                            class="tab-content scrollbox"
+                            id="contact"
+                            style="height: calc(100% - 40px)"
+                        >
+                            <h2
+                                style="
+                                    color: var(--blood-red);
+                                    margin-bottom: 12px;
+                                "
+                            >
+                                COMMUNICATION_PROTOCOLS.VCF
+                            </h2>
+                            <p style="margin-bottom: 12px">
+                                Establish communication through the following
+                                digital channels:
+                            </p>
+                            <div
+                                style="
+                                    font-family:
+                                        &quot;Courier New&quot;, monospace;
+                                    background: var(--machine-black);
+                                    color: var(--terminal-green);
+                                    padding: 8px;
+                                    margin: 8px 0;
+                                "
+                            >
+                                EMAIL: happymealltd@gmail.com<br />
+                                INSTAGRAM: @hmltd
+                            </div>
+                            <p style="margin-bottom: 12px; font-size: 25px">
+                                SEND US A MESSAGE!
+                            </p>
+                            <div class="industrial-btn">SEND_MESSAGE.EXE</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            // TAB SWITCHING SYSTEM
+            function switchTab(tabName) {
+                // HIDE ALL TAB CONTENTS
+                const contents = document.querySelectorAll(".tab-content");
+                contents.forEach((content) =>
+                    content.classList.remove("active"),
+                );
+
+                // REMOVE ACTIVE FROM ALL HEADERS
+                const headers = document.querySelectorAll(".tab-header");
+                headers.forEach((header) => header.classList.remove("active"));
+
+                // SHOW SELECTED TAB
+                document.getElementById(tabName).classList.add("active");
+                event.target.classList.add("active");
+            }
+
+            // STATUS TEXT CYCLING SYSTEM
+            const statusMessages = [
+                "NEURAL INTERFACE ACTIVE...",
+                "PROCESSING INDUSTRIAL DATA...",
+                "HATRED.EXE RUNNING...",
+                "DOWNLOADING BRUTALITY...",
+                "SYSTEM TEMPERATURE: CRITICAL",
+                "LOADING COUNT FUCKFACE...",
+                "SUCKING USER BLOOD...",
+                "INDUSTRIAL PROTOCOLS ENGAGED",
+            ];
+
+            let statusIndex = 0;
+            function updateStatus() {
+                document.getElementById("status-text").textContent =
+                    statusMessages[statusIndex];
+                statusIndex = (statusIndex + 1) % statusMessages.length;
+            }
+
+            // SPECTRUM ANALYZER GENERATION
+            function generateSpectrum() {
+                const container = document.getElementById("spectrum-container");
+                container.innerHTML = "";
+
+                for (let i = 0; i < 20; i++) {
+                    const bar = document.createElement("div");
+                    bar.className = "spectrum-bar";
+                    bar.style.left = i * 5 + "px";
+                    bar.style.animationDelay = i * 0.1 + "s";
+                    container.appendChild(bar);
+                }
+            }
+
+            // CHAT SYSTEM SIMULATION
+            const chatMessages = [
+                "> DOWNLOADING_HATRED.EXE",
+                "> INDUSTRIAL_USER_CONNECTED",
+                "> LOADING_BRUTALITY_CACHE...",
+                "> NEURAL_INTERFACE_READY",
+                "> SYSTEM_CORRUPTION_DETECTED",
+                "> REBOOTING_EMOTIONAL_CORE",
+                "> MECHANICAL_SOUL_ACTIVE",
+            ];
+
+            function addChatMessage() {
+                const chatContent = document.getElementById("chat-content");
+                const randomMessage =
+                    chatMessages[
+                        Math.floor(Math.random() * chatMessages.length)
+                    ];
+                const newMessage = document.createElement("div");
+                newMessage.textContent = randomMessage;
+                chatContent.appendChild(newMessage);
+
+                // KEEP ONLY LAST 8 MESSAGES
+                while (chatContent.children.length > 8) {
+                    chatContent.removeChild(chatContent.firstChild);
+                }
+
+                chatContent.scrollTop = chatContent.scrollHeight;
+            }
+
+            // SYSTEM STATS RANDOMIZATION
+            function updateStats() {
+                document.getElementById("cpu").textContent =
+                    Math.floor(Math.random() * 20 + 80) + "%";
+                document.getElementById("memory").textContent =
+                    Math.floor(Math.random() * 100 + 600) + "MB";
+                document.getElementById("temp").textContent =
+                    Math.floor(Math.random() * 10 + 80) + "°C";
+            }
+
+            // WINDOW RESIZE HANDLER
+            function onWindowResize() {
+                if (camera && renderer) {
+                    camera.aspect = window.innerWidth / window.innerHeight;
+                    camera.updateProjectionMatrix();
+                    renderer.setSize(window.innerWidth, window.innerHeight);
+                }
+            }
+
+            // INITIALIZATION SEQUENCE
+            window.addEventListener("load", function () {
+                initThreeJS();
+                generateSpectrum();
+
+                // START SYSTEM TIMERS
+                setInterval(updateStatus, 3000);
+                setInterval(addChatMessage, 5000);
+                setInterval(updateStats, 2000);
+
+                // HANDLE WINDOW RESIZE
+                window.addEventListener("resize", onWindowResize);
+
+                console.log("INDUSTRIAL TERMINAL SYSTEM LOADED");
+                console.log("NEURAL INTERFACE: ACTIVE");
+                console.log("BRUTALITY PROTOCOLS: ENGAGED");
+            });
+
+            // WINDOW DRAGGING FUNCTIONALITY
+            let isDragging = false;
+            let currentWindow = null;
+            let offset = { x: 0, y: 0 };
+
+            document.addEventListener("mousedown", function (e) {
+                if (e.target.classList.contains("window-header")) {
+                    isDragging = true;
+                    currentWindow = e.target.parentElement;
+                    const rect = currentWindow.getBoundingClientRect();
+                    offset.x = e.clientX - rect.left;
+                    offset.y = e.clientY - rect.top;
+                    currentWindow.style.position = "absolute";
+                    currentWindow.style.zIndex = "1000";
+                }
+            });
+
+            document.addEventListener("mousemove", function (e) {
+                if (isDragging && currentWindow) {
+                    currentWindow.style.left = e.clientX - offset.x + "px";
+                    currentWindow.style.top = e.clientY - offset.y + "px";
+                }
+            });
+
+            document.addEventListener("mouseup", function () {
+                if (isDragging) {
+                    isDragging = false;
+                    currentWindow = null;
+                }
+            });
+        </script>
+    </body>
+</html>
