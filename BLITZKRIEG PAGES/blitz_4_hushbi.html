@@ -1,41 +1,151 @@
-
-<HTML><script src="/_assets/midi/bg-sound.min.js"></script><script>BgSound.enableCompatMode({baseUrl: "/_assets/midi/"})</script>
+<HTML>
 <HEAD>
    <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
    <META NAME="Author" CONTENT="HMLTD">
    <META NAME="GENERATOR" CONTENT="Microsoft FrontPage 5.0">
-   <TITLE>BLITZKRIEG</TITLE>
+   <TITLE>HUSHBI</TITLE>
+
+   <style>
+   body {
+     margin: 0;
+     height: 100vh;
+     overflow: hidden;
+     background-repeat: no-repeat;
+     background-size: cover;
+   }
+
+   .moving-container {
+     position: absolute;
+     width: 300px;
+     height: auto;
+     animation-duration: 20s;
+     animation-iteration-count: infinite;
+     animation-timing-function: linear;
+     cursor: pointer;
+   }
+
+   .moving-container img {
+     width: 100%;
+     height: auto;
+     display: block;
+     pointer-events: none;
+   }
+
+   .image-text {
+     position: absolute;
+     top: 50%;
+     left: 50%;
+     transform: translate(-50%, -50%);
+     color: white;
+     font-size: 16px;
+     font-family: times, serif;
+     font-style: italic;
+     text-align: center;
+
+     pointer-events: none;
+     width: 90%;
+     z-index: 5;
+   }
+
+   @keyframes moveSquare {
+     0%   { top: 10%; left: 10%; }
+     25%  { top: 10%; left: calc(90% - 300px); }
+     50%  { top: calc(90% - 300px); left: calc(90% - 300px); }
+     75%  { top: calc(90% - 300px); left: 10%; }
+     100% { top: 10%; left: 10%; }
+   }
+
+   .image1 { animation-name: moveSquare; }
+   .image2 { animation-name: moveSquare; animation-delay: -5s; }
+   .image3 { animation-name: moveSquare; animation-delay: -10s; }
+   .image4 { animation-name: moveSquare; animation-delay: -15s; }
+
+   .text-overlay {
+     position: absolute;
+     top: 50%;
+     left: 50%;
+     transform: translate(-50%, -50%);
+     text-align: center;
+     color: white;
+     font-size: 13px;
+     font-family: Garamond, serif;
+     z-index: 10;
+     pointer-events: none;
+     width: 80%;
+   }
+   .text-overlay a {
+     color: white;
+     text-decoration: none;
+     pointer-events: auto;
+   }
+   </style>
 
 </HEAD>
+
 <BODY BACKGROUND="https://raw.githubusercontent.com/duckidouk/WEBSITE/refs/heads/main/CONTENT/darkdark_house.jpg" TEXT="#000000" BGCOLOR="#FFFFFF" LINK="#000080" VLINK="#000080" ALINK="#000080">
-    <audio id="myAudio" src="https://raw.githubusercontent.com/duckidouk/WEBSITE/main/CONTENT/sounds/a_confession.mp3"></audio>
 
-    <script>
-    document.addEventListener('click', function() {
-      var audio = document.getElementById('myAudio');
-      audio.currentTime = 0;
-      audio.play();
-    });
-    </script>
-<table height="100%" width="100%">
-  <tr>
-    <td align="center" valign="middle">
+   <!-- AUDIO FOR EACH IMAGE -->
+   <audio id="audio1" src="https://raw.githubusercontent.com/duckidouk/WEBSITE/main/CONTENT/sounds/blitz_ld_everybreath.mp3"></audio>
+   <audio id="audio2" src="https://raw.githubusercontent.com/duckidouk/WEBSITE/main/CONTENT/sounds/blitz_ld_shelooks.mp3"></audio>
+   <audio id="audio3" src="https://raw.githubusercontent.com/duckidouk/WEBSITE/main/CONTENT/sounds/blitz_ld_feelthevoid.mp3"></audio>
+   <audio id="audio4" src="https://raw.githubusercontent.com/duckidouk/WEBSITE/main/CONTENT/sounds/blitz_ld_thelife.mp3"></audio>
 
-      <div style="position: relative; display: inline-block;">
+   <!-- CENTER AUDIO (for center text) -->
+   <audio id="centerAudio" src="https://raw.githubusercontent.com/duckidouk/WEBSITE/main/CONTENT/sounds/blitz_ohma.mp3"></audio>
 
-        <img src="https://raw.githubusercontent.com/duckidouk/WEBSITE/refs/heads/main/CONTENT/monstersinbed.png"
-             style="filter: invert(10%); width: 700px; height: auto;">
+   <script>
+   // Preload all audio files
+   window.addEventListener('load', function() {
+     document.querySelectorAll('audio').forEach(function(audio) {
+       audio.load();
+     });
+   });
 
-        <div style="position: absolute; top: 50%; left: ; width: 100%; transform: translateY(-50%) ; white-space:nowrap; color: blue; font-size: 14px;font-family: Garamond, serif;">
-          <a href="blitzkrieg_landing.html" style="color: blue; text-decoration: none;">Luminous simulacra of estatic amphibious creatures inflict repeated mutilations on themselves in shadows of our cathedrals. <br>The miracle of the Virgin's immaculate conception is the generate remnant of the ancient barren dragon,<br> torn apart to give birth to the world. <br ><b>The Devourer</b> </a>
-        </div>
+   // Play specific audio for each image
+   function playAudio(audioId) {
+     var audio = document.getElementById(audioId);
+     audio.currentTime = 0;
+     audio.play();
+   }
 
+   // Play center audio
+   function playCenterAudio() {
+     var audio = document.getElementById('centerAudio');
+     audio.currentTime = 0;
+     audio.play();
+   }
+   </script>
 
-      </div>
+   <!-- MOVING IMAGE 1 (Top Left) - plays audio1 -->
+   <div class="moving-container image1" onclick="playAudio('audio1')">
+     <img src="https://raw.githubusercontent.com/duckidouk/WEBSITE/refs/heads/main/CONTENT/apple_knife.png">
+     <div class="image-text">with every breath she takes</div>
+   </div>
 
-    </td>
-  </tr>
-</table>
+   <!-- MOVING IMAGE 2 (Top Right) - plays audio2 -->
+   <div class="moving-container image2" onclick="playAudio('audio2')">
+     <img src="https://raw.githubusercontent.com/duckidouk/WEBSITE/refs/heads/main/CONTENT/chain.png">
+     <div class="image-text">she looks at me i fall in love </div>
+   </div>
+
+   <!-- MOVING IMAGE 3 (Bottom Right) - plays audio3 -->
+   <div class="moving-container image3" onclick="playAudio('audio3')">
+     <img src="https://raw.githubusercontent.com/duckidouk/WEBSITE/refs/heads/main/CONTENT/drugs.png">
+     <div class="image-text"> i feel the void inside me open up </div>
+   </div>
+
+   <!-- MOVING IMAGE 4 (Bottom Left) - plays audio4 -->
+   <div class="moving-container image4" onclick="playAudio('audio4')">
+     <img src="https://raw.githubusercontent.com/duckidouk/WEBSITE/refs/heads/main/CONTENT/TV.png">
+     <div class="image-text">the life i have is not enough</div>
+   </div>
+
+   <!-- CENTER TEXT OVERLAY -->
+   <div class="text-overlay">
+     <a href="blitzkrieg_landing.html" onclick="playCenterAudio();">
+       the true form of the night time
+     </a>
+   </div>
 
 </BODY>
 </HTML>
