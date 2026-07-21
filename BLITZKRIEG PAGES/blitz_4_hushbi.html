@@ -41,7 +41,6 @@
      font-family: times, serif;
      font-style: italic;
      text-align: center;
-
      pointer-events: none;
      width: 90%;
      z-index: 5;
@@ -70,13 +69,13 @@
      font-size: 13px;
      font-family: Garamond, serif;
      z-index: 10;
-     pointer-events: none;
      width: 80%;
    }
    .text-overlay a {
      color: white;
      text-decoration: none;
-     pointer-events: auto;
+     display: inline-block;
+     padding: 10px 20px;
    }
    </style>
 
@@ -93,7 +92,12 @@
    <!-- CENTER AUDIO (for center text) -->
    <audio id="centerAudio" src="https://raw.githubusercontent.com/duckidouk/WEBSITE/main/CONTENT/sounds/blitz_ohma.mp3"></audio>
 
+   <!-- DEFAULT AUDIO (for random clicks) -->
+   <audio id="defaultAudio" src="https://raw.githubusercontent.com/duckidouk/WEBSITE/main/CONTENT/sounds/blitz_808down.mp3"></audio>
+
    <script>
+   var defaultAudio = document.getElementById('defaultAudio');
+
    // Preload all audio files
    window.addEventListener('load', function() {
      document.querySelectorAll('audio').forEach(function(audio) {
@@ -108,41 +112,60 @@
      audio.play();
    }
 
-   // Play center audio
-   function playCenterAudio() {
+   // Play center audio and navigate
+   function handleCenterClick(event) {
+     event.preventDefault(); // Stop navigation immediately
+
      var audio = document.getElementById('centerAudio');
      audio.currentTime = 0;
      audio.play();
+
+     // Navigate after a small delay to let audio start
+     setTimeout(function() {
+       window.location.href = 'blitzkrieg_landing.html';
+     }, 900);
    }
+
+   // Play default audio on random clicks (blank space)
+   document.addEventListener('click', function(event) {
+     var isMovingContainer = event.target.closest('.moving-container');
+     var isCenterText = event.target.closest('.text-overlay');
+     var isLink = event.target.closest('a');
+
+     if (!isMovingContainer && !isCenterText && !isLink) {
+       defaultAudio.currentTime = 0;
+       defaultAudio.play();
+     }
+   });
    </script>
 
-   <!-- MOVING IMAGE 1 (Top Left) - plays audio1 -->
+   <!-- MOVING IMAGE 1 (Top Left) -->
    <div class="moving-container image1" onclick="playAudio('audio1')">
      <img src="https://raw.githubusercontent.com/duckidouk/WEBSITE/refs/heads/main/CONTENT/apple_knife.png">
      <div class="image-text">with every breath she takes</div>
    </div>
 
-   <!-- MOVING IMAGE 2 (Top Right) - plays audio2 -->
+   <!-- MOVING IMAGE 2 (Top Right) -->
    <div class="moving-container image2" onclick="playAudio('audio2')">
      <img src="https://raw.githubusercontent.com/duckidouk/WEBSITE/refs/heads/main/CONTENT/chain.png">
-     <div class="image-text">she looks at me i fall in love </div>
+     <div class="image-text">she looks at me i fall in love</div>
    </div>
 
-   <!-- MOVING IMAGE 3 (Bottom Right) - plays audio3 -->
+   <!-- MOVING IMAGE 3 (Bottom Right) -->
    <div class="moving-container image3" onclick="playAudio('audio3')">
      <img src="https://raw.githubusercontent.com/duckidouk/WEBSITE/refs/heads/main/CONTENT/drugs.png">
-     <div class="image-text"> i feel the void inside me open up </div>
+     <div class="image-text">i feel the void inside me open up</div>
    </div>
 
-   <!-- MOVING IMAGE 4 (Bottom Left) - plays audio4 -->
+   <!-- MOVING IMAGE 4 (Bottom Left) -->
    <div class="moving-container image4" onclick="playAudio('audio4')">
      <img src="https://raw.githubusercontent.com/duckidouk/WEBSITE/refs/heads/main/CONTENT/TV.png">
      <div class="image-text">the life i have is not enough</div>
    </div>
 
-   <!-- CENTER TEXT OVERLAY -->
+   <!-- CENTER TEXT - plays audio, THEN navigates -->
    <div class="text-overlay">
-     <a href="blitzkrieg_landing.html" onclick="playCenterAudio();">
+     <a href="blitzkrieg_landing.html" onclick="handleCenterClick(event);">
        the true form of the night time
      </a>
    </div>
