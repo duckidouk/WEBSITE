@@ -41,9 +41,15 @@
             font-size: 30px;
             letter-spacing: 4px;
             text-align: center;
-            pointer-events: none;
+            pointer-events: auto;
+            cursor: pointer;
             font-weight: 300;
             font-family: 'Open Sans', sans-serif;
+            transition: opacity 0.3s ease;
+            z-index: 10;
+        }
+        .bottom-text:hover {
+            opacity: 0.6;
         }
 
         .loading {
@@ -79,8 +85,8 @@
     <!-- ✅ TOP TEXT - "demons" (clickable) -->
     <div class="top-text" id="demonsLink">demons</div>
 
-    <!-- ✅ BOTTOM TEXT - "the mother" -->
-    <div class="bottom-text">the mother</div>
+    <!-- ✅ BOTTOM TEXT - "the mother" (clickable) -->
+    <div class="bottom-text" id="motherLink">the mother</div>
 
     <script type="importmap">
         {
@@ -105,19 +111,59 @@
             // window.location.href = DEMONS_URL;
         });
 
-        // --- CUSTOM SOUND SETUP ---
+        // --- BACKGROUND SOUND (loops when you click) ---
+        // ✅ CHANGE THIS TO YOUR BACKGROUND SOUND URL
+        const BG_SOUND_URL = 'https://raw.githubusercontent.com/duckidouk/WEBSITE/main/CONTENT/sounds/your-background-sound.mp3';
+        let bgAudioContext = null;
+        let bgSource = null;
+        let bgGainNode = null;
+        let isBgPlaying = false;
+
+        // --- SOUND FOR CLICKING "the mother" ---
+        // ✅ CHANGE THIS TO YOUR CLICK SOUND URL
+        const CLICK_SOUND_URL = 'https://raw.githubusercontent.com/duckidouk/WEBSITE/main/CONTENT/sounds/your-click-sound.mp3';
+        let clickSoundBuffer = null;
+
+        // --- REVERB SETUP (ONLY FOR "the mother" click sound) ---
+        let reverbConvolver = null;
+
+        function createReverb(audioCtx) {
+            try {
+                const sampleRate = audioCtx.sampleRate || 44100;
+                const impulseLength = sampleRate * 2.5; // 2.5 seconds reverb decay
+                const impulseBuffer = audioCtx.createBuffer(2, impulseLength, sampleRate);
+
+                for (let channel = 0; channel < 2; channel++) {
+                    const channelData = impulseBuffer.getChannelData(channel);
+                    for (let i = 0; i < impulseLength; i++) {
+                        const decay = Math.exp(-i / (sampleRate * 0.6));
+                        channelData[i] = (Math.random() * 2 - 1) * decay * 0.4;
+                    }
+                }
+
+                reverbConvolver = audioCtx.createConvolver();
+                reverbConvolver.buffer = impulseBuffer;
+                console.log('✅ Reverb created for "the mother" click!');
+            } catch (e) {
+                console.warn('⚠️ Reverb creation failed:', e);
+            }
+        }
+
+        // --- CUSTOM SOUND SETUP (particle interaction - NO REVERB) ---
         let audioContext = null;
         let lastPlayTime = 0;
         const MIN_INTERVAL = 0.08;
         let audioEnabled = false;
         let soundBuffer = null;
 
-        // ✅ CHANGE THIS TO YOUR SOUND FILE ON GITHUB
-        const SOUND_URL = 'https://raw.githubusercontent.com/duckidouk/WEBSITE/main/CONTENT/your-sound.mp3';
+        // ✅ YOUR SOUND URL - KEEP THIS!
+        const SOUND_URL = 'https://raw.githubusercontent.com/duckidouk/WEBSITE/main/CONTENT/sounds/blitz_fuck.mp3';
 
         function initAudio() {
             if (!audioContext) {
                 audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                // Create reverb for "the mother" click using the same context
+                createReverb(audioContext);
             }
             if (audioContext.state === 'suspended') {
                 audioContext.resume();
@@ -125,6 +171,173 @@
             audioEnabled = true;
             console.log('🔊 Audio initialized!');
         }
+
+        // --- LOAD BACKGROUND SOUND ---
+        async function loadBackgroundSound() {
+            try {
+                console.log('🔊 Loading background sound from:', BG_SOUND_URL);
+                const response = await fetch(BG_SOUND_URL);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const arrayBuffer = await response.arrayBuffer();
+                if (!bgAudioContext) {
+                    bgAudioContext = new (window.AudioContext || window.webkitAudioContext)();
+                }
+                const bgBuffer = await bgAudioContext.decodeAudioData(arrayBuffer);
+                console.log('✅ Background sound loaded successfully!');
+                console.log('📢 Background duration:', bgBuffer.duration, 'seconds');
+
+                // Store the buffer for later use
+                window._bgBuffer = bgBuffer;
+            } catch (error) {
+                console.warn('⚠️ Failed to load background sound:', error);
+                console.log('📁 Make sure your sound file is at:', BG_SOUND_URL);
+            }
+        }
+
+        // --- LOAD CLICK SOUND ---
+        async function loadClickSound() {
+            try {
+                console.log('🔊 Loading click sound from:', CLICK_SOUND_URL);
+                const response = await fetch(CLICK_SOUND_URL);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const arrayBuffer = await response.arrayBuffer();
+                if (!audioContext) {
+                    audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                    createReverb(audioContext);
+                }
+                clickSoundBuffer = await audioContext.decodeAudioData(arrayBuffer);
+                console.log('✅ Click sound loaded successfully!');
+            } catch (error) {
+                console.warn('⚠️ Failed to load click sound:', error);
+                console.log('📁 Make sure your sound file is at:', CLICK_SOUND_URL);
+            }
+        }
+
+        // --- PLAY BACKGROUND SOUND (loops - NO REVERB) ---
+        function playBackgroundSound() {
+            if (isBgPlaying) {
+                stopBackgroundSound();
+                return;
+            }
+
+            if (!window._bgBuffer) {
+                console.warn('⚠️ Background sound not loaded yet');
+                return;
+            }
+
+            try {
+                if (!bgAudioContext) {
+                    bgAudioContext = new (window.AudioContext || window.webkitAudioContext)();
+                }
+                if (bgAudioContext.state === 'suspended') {
+                    bgAudioContext.resume();
+                }
+
+                bgSource = bgAudioContext.createBufferSource();
+                bgGainNode = bgAudioContext.createGain();
+
+                bgSource.buffer = window._bgBuffer;
+                bgSource.loop = true;
+
+                bgSource.connect(bgGainNode);
+                bgGainNode.connect(bgAudioContext.destination);
+
+                bgGainNode.gain.setValueAtTime(0.3, bgAudioContext.currentTime);
+                bgSource.start(0);
+                isBgPlaying = true;
+                console.log('▶️ Background sound started (no reverb)');
+            } catch (e) {
+                console.warn('Background playback error:', e);
+            }
+        }
+
+        // --- STOP BACKGROUND SOUND ---
+        function stopBackgroundSound() {
+            try {
+                if (bgSource) {
+                    bgSource.stop();
+                    bgSource = null;
+                }
+                isBgPlaying = false;
+                console.log('⏹️ Background sound stopped');
+            } catch (e) {
+                console.warn('Stop error:', e);
+            }
+        }
+
+        // --- PLAY CLICK SOUND WITH REVERB (for "the mother") ---
+        function playClickSoundWithReverb() {
+            if (!audioEnabled) {
+                initAudio();
+            }
+
+            if (!clickSoundBuffer) {
+                console.warn('⚠️ Click sound not loaded yet');
+                // Fallback: play a beep with reverb
+                try {
+                    const oscillator = audioContext.createOscillator();
+                    const gainNode = audioContext.createGain();
+
+                    // ✅ CONNECT WITH REVERB
+                    if (reverbConvolver) {
+                        oscillator.connect(gainNode);
+                        gainNode.connect(reverbConvolver);
+                        reverbConvolver.connect(audioContext.destination);
+                    } else {
+                        oscillator.connect(gainNode);
+                        gainNode.connect(audioContext.destination);
+                    }
+
+                    oscillator.type = 'sine';
+                    oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
+                    gainNode.gain.setValueAtTime(0.15, audioContext.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.1);
+                    oscillator.start(audioContext.currentTime);
+                    oscillator.stop(audioContext.currentTime + 0.1);
+                } catch (e) {
+                    console.warn('Fallback click error:', e);
+                }
+                return;
+            }
+
+            try {
+                const source = audioContext.createBufferSource();
+                source.buffer = clickSoundBuffer;
+
+                const gainNode = audioContext.createGain();
+
+                // ✅ CONNECT WITH REVERB
+                if (reverbConvolver) {
+                    source.connect(gainNode);
+                    gainNode.connect(reverbConvolver);
+                    reverbConvolver.connect(audioContext.destination);
+                } else {
+                    source.connect(gainNode);
+                    gainNode.connect(audioContext.destination);
+                }
+
+                gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+                source.start(audioContext.currentTime);
+                console.log('🎵 Click sound played with reverb!');
+            } catch (e) {
+                console.warn('Click sound playback error:', e);
+            }
+        }
+
+        // --- CLICK EVENT FOR "the mother" ---
+        document.getElementById('motherLink').addEventListener('click', () => {
+            playClickSoundWithReverb(); // Plays click sound WITH REVERB
+            playBackgroundSound(); // Toggle background sound on/off (NO REVERB)
+        });
+
+        // --- LOAD ALL SOUNDS ---
+        loadSound();         // Particle interaction sound (NO REVERB)
+        loadBackgroundSound(); // Background looping sound (NO REVERB)
+        loadClickSound();     // Click sound for "the mother" (WITH REVERB)
 
         async function loadSound() {
             try {
@@ -136,16 +349,17 @@
                 const arrayBuffer = await response.arrayBuffer();
                 if (!audioContext) {
                     audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                    createReverb(audioContext);
                 }
                 soundBuffer = await audioContext.decodeAudioData(arrayBuffer);
                 console.log('✅ Custom sound loaded successfully!');
+                console.log('📢 Sound duration:', soundBuffer.duration, 'seconds');
             } catch (error) {
                 console.warn('⚠️ Failed to load custom sound:', error);
                 console.log('💡 Using fallback synthesized sound');
+                console.log('📁 Make sure your sound file is at:', SOUND_URL);
             }
         }
-
-        loadSound();
 
         function playInteractionSound(intensity) {
             if (!audioEnabled) return;
@@ -156,42 +370,38 @@
             lastPlayTime = now;
 
             try {
+                let source;
+                let gainNode = audioContext.createGain();
+
                 if (soundBuffer) {
-                    const source = audioContext.createBufferSource();
+                    source = audioContext.createBufferSource();
                     source.buffer = soundBuffer;
-
-                    const gainNode = audioContext.createGain();
-                    source.connect(gainNode);
-                    gainNode.connect(audioContext.destination);
-
-                    const volume = Math.min(0.4, intensity * 0.5);
-                    gainNode.gain.setValueAtTime(volume, audioContext.currentTime);
                     source.playbackRate.value = 0.8 + intensity * 0.4;
-
-                    source.start(audioContext.currentTime);
                 } else {
-                    const oscillator = audioContext.createOscillator();
-                    const gainNode = audioContext.createGain();
+                    // Fallback synthesized sound
+                    source = audioContext.createOscillator();
+                    source.type = 'sine';
+                    source.frequency.setValueAtTime(200 + intensity * 600, audioContext.currentTime);
+                }
 
-                    oscillator.connect(gainNode);
-                    gainNode.connect(audioContext.destination);
+                // ✅ NO REVERB - Direct connection
+                source.connect(gainNode);
+                gainNode.connect(audioContext.destination);
 
-                    oscillator.type = 'sine';
-                    const frequency = 200 + intensity * 600;
-                    oscillator.frequency.setValueAtTime(frequency, audioContext.currentTime);
+                const volume = Math.min(0.4, intensity * 0.5);
+                gainNode.gain.setValueAtTime(volume, audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.08);
 
-                    const volume = Math.min(0.2, intensity * 0.3);
-                    gainNode.gain.setValueAtTime(volume, audioContext.currentTime);
-                    gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.08);
-
-                    oscillator.start(audioContext.currentTime);
-                    oscillator.stop(audioContext.currentTime + 0.08);
+                if (source.start) {
+                    source.start(audioContext.currentTime);
+                    source.stop(audioContext.currentTime + 0.08);
                 }
             } catch (e) {
                 console.warn('Sound playback error:', e);
             }
         }
 
+        // --- AUTO-INITIALIZE AUDIO ON FIRST USER INTERACTION ---
         function autoInitAudio() {
             if (!audioEnabled) {
                 initAudio();
@@ -229,11 +439,11 @@
                 texture.wrapT = THREE.RepeatWrapping;
                 texture.repeat.set(4, 4);
                 scene.background = texture;
-                console.log('✅ Background image loaded!');
+                console.log('✅ Background image loaded from GitHub!');
             },
             undefined,
             (error) => {
-                console.warn('⚠️ Background failed to load:', error);
+                console.warn('⚠️ Background image failed to load, using fallback color:', error);
                 scene.background = new THREE.Color(0x0a0a0f);
             }
         );
@@ -275,7 +485,7 @@
         light2.position.set(-3, -1, 2);
         scene.add(light2);
 
-        // --- SURFACE SAMPLING ---
+        // --- SURFACE SAMPLING FUNCTION ---
         function sampleSurface(geometry, numParticles = 10000) {
             const posAttr = geometry.attributes.position;
             if (!posAttr) return null;
@@ -339,7 +549,7 @@
             return sampledPoints;
         }
 
-        // --- CREATE PARTICLES ---
+        // --- CREATE PARTICLE SYSTEM FROM SAMPLED POINTS ---
         function createParticlesFromPoints(points) {
             const count = points.length / 3;
             const colors = [];
@@ -406,7 +616,7 @@
             blending: THREE.NormalBlending,
         });
 
-        // --- LOAD MODEL ---
+        // --- LOAD MODEL AND GENERATE PARTICLES ---
         let particleSystem = null;
         let modelGroup = new THREE.Group();
         scene.add(modelGroup);
@@ -556,6 +766,7 @@
                 particleSystem.geometry.attributes.position.needsUpdate = true;
                 particleSystem.geometry.attributes.color.needsUpdate = true;
 
+                // 🎵 PLAY SOUND (NO REVERB)
                 if (maxInteraction > 0.1) {
                     const intensity = Math.min(1, maxInteraction * 0.5);
                     playInteractionSound(intensity);
@@ -581,6 +792,10 @@
 
         console.log('✨ Demons at top, Mother at bottom!');
         console.log('🔗 Click "demons" to go to:', DEMONS_URL);
+        console.log('🔊 Particle sound URL:', SOUND_URL);
+        console.log('🔊 Background sound URL:', BG_SOUND_URL);
+        console.log('🔊 Click sound URL:', CLICK_SOUND_URL);
+        console.log('📌 Click "the mother" to play sound with reverb + toggle background!');
     </script>
 </body>
 </html>
