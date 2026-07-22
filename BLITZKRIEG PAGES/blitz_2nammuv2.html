@@ -113,7 +113,7 @@
 
         // --- BACKGROUND SOUND (loops when you click) ---
         // ✅ CHANGE THIS TO YOUR BACKGROUND SOUND URL
-        const BG_SOUND_URL = 'https://raw.githubusercontent.com/duckidouk/WEBSITE/main/CONTENT/sounds/your-background-sound.mp3';
+        const BG_SOUND_URL = 'https://raw.githubusercontent.com/duckidouk/WEBSITE/main/CONTENT/sounds/blitz_piano_up.mp3';
         let bgAudioContext = null;
         let bgSource = null;
         let bgGainNode = null;
@@ -121,35 +121,10 @@
 
         // --- SOUND FOR CLICKING "the mother" ---
         // ✅ CHANGE THIS TO YOUR CLICK SOUND URL
-        const CLICK_SOUND_URL = 'https://raw.githubusercontent.com/duckidouk/WEBSITE/main/CONTENT/sounds/your-click-sound.mp3';
+        const CLICK_SOUND_URL = 'https://raw.githubusercontent.com/duckidouk/WEBSITE/main/CONTENT/sounds/blitz_piano_up.mp3';
         let clickSoundBuffer = null;
 
-        // --- REVERB SETUP (ONLY FOR "the mother" click sound) ---
-        let reverbConvolver = null;
-
-        function createReverb(audioCtx) {
-            try {
-                const sampleRate = audioCtx.sampleRate || 44100;
-                const impulseLength = sampleRate * 2.5; // 2.5 seconds reverb decay
-                const impulseBuffer = audioCtx.createBuffer(2, impulseLength, sampleRate);
-
-                for (let channel = 0; channel < 2; channel++) {
-                    const channelData = impulseBuffer.getChannelData(channel);
-                    for (let i = 0; i < impulseLength; i++) {
-                        const decay = Math.exp(-i / (sampleRate * 0.6));
-                        channelData[i] = (Math.random() * 2 - 1) * decay * 0.4;
-                    }
-                }
-
-                reverbConvolver = audioCtx.createConvolver();
-                reverbConvolver.buffer = impulseBuffer;
-                console.log('✅ Reverb created for "the mother" click!');
-            } catch (e) {
-                console.warn('⚠️ Reverb creation failed:', e);
-            }
-        }
-
-        // --- CUSTOM SOUND SETUP (particle interaction - NO REVERB) ---
+        // --- CUSTOM SOUND SETUP (particle interaction) ---
         let audioContext = null;
         let lastPlayTime = 0;
         const MIN_INTERVAL = 0.08;
@@ -162,8 +137,6 @@
         function initAudio() {
             if (!audioContext) {
                 audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                // Create reverb for "the mother" click using the same context
-                createReverb(audioContext);
             }
             if (audioContext.state === 'suspended') {
                 audioContext.resume();
@@ -207,7 +180,6 @@
                 const arrayBuffer = await response.arrayBuffer();
                 if (!audioContext) {
                     audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                    createReverb(audioContext);
                 }
                 clickSoundBuffer = await audioContext.decodeAudioData(arrayBuffer);
                 console.log('✅ Click sound loaded successfully!');
@@ -217,9 +189,10 @@
             }
         }
 
-        // --- PLAY BACKGROUND SOUND (loops - NO REVERB) ---
+        // --- PLAY BACKGROUND SOUND (loops) ---
         function playBackgroundSound() {
             if (isBgPlaying) {
+                // If already playing, stop it
                 stopBackgroundSound();
                 return;
             }
@@ -237,19 +210,23 @@
                     bgAudioContext.resume();
                 }
 
+                // Create source and gain node for volume control
                 bgSource = bgAudioContext.createBufferSource();
                 bgGainNode = bgAudioContext.createGain();
 
                 bgSource.buffer = window._bgBuffer;
-                bgSource.loop = true;
+                bgSource.loop = true; // ✅ LOOP ENABLED
 
+                // Connect: source -> gain -> destination
                 bgSource.connect(bgGainNode);
                 bgGainNode.connect(bgAudioContext.destination);
 
+                // Set volume (0.0 to 1.0)
                 bgGainNode.gain.setValueAtTime(0.3, bgAudioContext.currentTime);
+
                 bgSource.start(0);
                 isBgPlaying = true;
-                console.log('▶️ Background sound started (no reverb)');
+                console.log('▶️ Background sound started (looping)');
             } catch (e) {
                 console.warn('Background playback error:', e);
             }
@@ -269,29 +246,20 @@
             }
         }
 
-        // --- PLAY CLICK SOUND WITH REVERB (for "the mother") ---
-        function playClickSoundWithReverb() {
+        // --- PLAY CLICK SOUND (for "the mother") ---
+        function playClickSound() {
             if (!audioEnabled) {
                 initAudio();
             }
 
             if (!clickSoundBuffer) {
                 console.warn('⚠️ Click sound not loaded yet');
-                // Fallback: play a beep with reverb
+                // Fallback: play a beep
                 try {
                     const oscillator = audioContext.createOscillator();
                     const gainNode = audioContext.createGain();
-
-                    // ✅ CONNECT WITH REVERB
-                    if (reverbConvolver) {
-                        oscillator.connect(gainNode);
-                        gainNode.connect(reverbConvolver);
-                        reverbConvolver.connect(audioContext.destination);
-                    } else {
-                        oscillator.connect(gainNode);
-                        gainNode.connect(audioContext.destination);
-                    }
-
+                    oscillator.connect(gainNode);
+                    gainNode.connect(audioContext.destination);
                     oscillator.type = 'sine';
                     oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
                     gainNode.gain.setValueAtTime(0.15, audioContext.currentTime);
@@ -309,20 +277,11 @@
                 source.buffer = clickSoundBuffer;
 
                 const gainNode = audioContext.createGain();
-
-                // ✅ CONNECT WITH REVERB
-                if (reverbConvolver) {
-                    source.connect(gainNode);
-                    gainNode.connect(reverbConvolver);
-                    reverbConvolver.connect(audioContext.destination);
-                } else {
-                    source.connect(gainNode);
-                    gainNode.connect(audioContext.destination);
-                }
+                source.connect(gainNode);
+                gainNode.connect(audioContext.destination);
 
                 gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
                 source.start(audioContext.currentTime);
-                console.log('🎵 Click sound played with reverb!');
             } catch (e) {
                 console.warn('Click sound playback error:', e);
             }
@@ -330,14 +289,14 @@
 
         // --- CLICK EVENT FOR "the mother" ---
         document.getElementById('motherLink').addEventListener('click', () => {
-            playClickSoundWithReverb(); // Plays click sound WITH REVERB
-            playBackgroundSound(); // Toggle background sound on/off (NO REVERB)
+            playClickSound();
+            playBackgroundSound(); // Toggle background sound on/off
         });
 
         // --- LOAD ALL SOUNDS ---
-        loadSound();         // Particle interaction sound (NO REVERB)
-        loadBackgroundSound(); // Background looping sound (NO REVERB)
-        loadClickSound();     // Click sound for "the mother" (WITH REVERB)
+        loadSound();         // Particle interaction sound
+        loadBackgroundSound(); // Background looping sound
+        loadClickSound();     // Click sound for "the mother"
 
         async function loadSound() {
             try {
@@ -349,7 +308,6 @@
                 const arrayBuffer = await response.arrayBuffer();
                 if (!audioContext) {
                     audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                    createReverb(audioContext);
                 }
                 soundBuffer = await audioContext.decodeAudioData(arrayBuffer);
                 console.log('✅ Custom sound loaded successfully!');
@@ -370,31 +328,41 @@
             lastPlayTime = now;
 
             try {
-                let source;
-                let gainNode = audioContext.createGain();
-
                 if (soundBuffer) {
-                    source = audioContext.createBufferSource();
+                    // ✅ PLAY CUSTOM SOUND
+                    const source = audioContext.createBufferSource();
                     source.buffer = soundBuffer;
+
+                    const gainNode = audioContext.createGain();
+                    source.connect(gainNode);
+                    gainNode.connect(audioContext.destination);
+
+                    // Volume based on intensity (0 to 0.4)
+                    const volume = Math.min(0.4, intensity * 0.5);
+                    gainNode.gain.setValueAtTime(volume, audioContext.currentTime);
+
+                    // Optional: pitch shift based on intensity
                     source.playbackRate.value = 0.8 + intensity * 0.4;
-                } else {
-                    // Fallback synthesized sound
-                    source = audioContext.createOscillator();
-                    source.type = 'sine';
-                    source.frequency.setValueAtTime(200 + intensity * 600, audioContext.currentTime);
-                }
 
-                // ✅ NO REVERB - Direct connection
-                source.connect(gainNode);
-                gainNode.connect(audioContext.destination);
-
-                const volume = Math.min(0.4, intensity * 0.5);
-                gainNode.gain.setValueAtTime(volume, audioContext.currentTime);
-                gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.08);
-
-                if (source.start) {
                     source.start(audioContext.currentTime);
-                    source.stop(audioContext.currentTime + 0.08);
+                } else {
+                    // ✅ FALLBACK: Synthesized sound
+                    const oscillator = audioContext.createOscillator();
+                    const gainNode = audioContext.createGain();
+
+                    oscillator.connect(gainNode);
+                    gainNode.connect(audioContext.destination);
+
+                    oscillator.type = 'sine';
+                    const frequency = 200 + intensity * 600;
+                    oscillator.frequency.setValueAtTime(frequency, audioContext.currentTime);
+
+                    const volume = Math.min(0.2, intensity * 0.3);
+                    gainNode.gain.setValueAtTime(volume, audioContext.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.08);
+
+                    oscillator.start(audioContext.currentTime);
+                    oscillator.stop(audioContext.currentTime + 0.08);
                 }
             } catch (e) {
                 console.warn('Sound playback error:', e);
@@ -766,7 +734,7 @@
                 particleSystem.geometry.attributes.position.needsUpdate = true;
                 particleSystem.geometry.attributes.color.needsUpdate = true;
 
-                // 🎵 PLAY SOUND (NO REVERB)
+                // 🎵 PLAY SOUND
                 if (maxInteraction > 0.1) {
                     const intensity = Math.min(1, maxInteraction * 0.5);
                     playInteractionSound(intensity);
@@ -795,7 +763,7 @@
         console.log('🔊 Particle sound URL:', SOUND_URL);
         console.log('🔊 Background sound URL:', BG_SOUND_URL);
         console.log('🔊 Click sound URL:', CLICK_SOUND_URL);
-        console.log('📌 Click "the mother" to play sound with reverb + toggle background!');
+        console.log('📌 Click "the mother" to toggle background sound!');
     </script>
 </body>
 </html>
